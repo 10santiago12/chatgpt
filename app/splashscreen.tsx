@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    width: 500,
-    height: 500,
+    width: 350,
+    height: 350,
     resizeMode: "contain",
   },
 });
