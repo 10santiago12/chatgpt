@@ -14,7 +14,7 @@ export default function Index() {
       }}
     >
     <Button
-    title="Iniciar app :)"
+    title="Start app :)"
     onPress={() => router.push("/splashscreen")}
     color={"#58bed5"}    
     />

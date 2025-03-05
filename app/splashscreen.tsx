@@ -10,7 +10,7 @@ export default function splashscreen() {
 
   useEffect(() => {
     setTimeout(() => {
-      router.replace("/chat");
+      router.replace("/welcome");
     }, 1000);
   }, []);
   

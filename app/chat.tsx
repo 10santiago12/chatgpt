@@ -1,21 +1,21 @@
-import { View, Text, TextInput, Button, ScrollView, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
-import React, { useState, useRef, useEffect } from 'react'; // Importa useRef y useEffect
+import { View, Text, TextInput, ScrollView, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, Keyboard } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
 import { APIResponse } from '@/interfaces/Responses';
 import Markdown from 'react-native-markdown-display';
-
+import { Ionicons } from '@expo/vector-icons';
 export default function Chat() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<{ text: string; user: boolean }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Referencia al ScrollView
   const scrollViewRef = useRef<ScrollView>(null);
 
   const getResponse = async () => {
     if (!message.trim()) return;
 
-    setMessages((prev) => [...prev, { text: message, user: true }]); // Agregar mensaje del usuario
-    setMessage(""); // Limpiar input
+    setMessages((prev) => [...prev, { text: message, user: true }]);
+    setMessage("");
+    Keyboard.dismiss();
 
     try {
       setIsLoading(true);
@@ -44,21 +44,20 @@ export default function Chat() {
     }
   };
 
-  // Desplazar el ScrollView al final cuando se actualizan los mensajes
   useEffect(() => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }
-  }, [messages]); // Se ejecuta cada vez que `messages` cambia
+  }, [messages]);
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"} // Ajusta el comportamiento según la plataforma
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0} // Ajusta el offset si es necesario
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
       <ScrollView
-        ref={scrollViewRef} // Asignar la referencia al ScrollView
+        ref={scrollViewRef}
         style={styles.chatContainer}
         contentContainerStyle={{ flexGrow: 1 }}
       >
@@ -74,9 +73,10 @@ export default function Chat() {
         {isLoading && <Text style={styles.loading}>Thinking...</Text>}
       </ScrollView>
 
+      {}
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, {paddingVertical:15}]}
           value={message}
           onChangeText={setMessage}
           placeholder="Type your message..."
@@ -84,7 +84,10 @@ export default function Chat() {
           returnKeyType="send"
           onSubmitEditing={getResponse}
         />
-        <Button title="Send" onPress={getResponse} color={"#18a47c"} />
+        {}
+        <TouchableOpacity onPress={getResponse} style={styles.sendButton}>
+          <Ionicons name="arrow-up" size={24} color="#FFF" />
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );
@@ -103,8 +106,8 @@ const styles = StyleSheet.create({
   message: {
     maxWidth: "80%",
     padding: 10,
-    marginVertical: 10,
-    borderRadius: 25,
+    marginVertical: 5,
+    borderRadius: 10,
   },
   userMessage: {
     alignSelf: "flex-end",
@@ -137,5 +140,12 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "#fff",
     paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+  sendButton: {
+    backgroundColor: "#18a47c",
+    borderRadius: 20,
+    padding: 10,
+    marginLeft: 10,
   },
 });

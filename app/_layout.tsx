@@ -4,26 +4,25 @@ export default function RootLayout() {
   return (
     <Stack
       screenOptions={{
-        // Opciones globales para todas las pantallas
-        headerTintColor: "#fff", // Color del texto del título y la flecha de regresar
+        headerTintColor: "#fff",
         headerTitleStyle: {
-          color: "#fff", // Color del texto del título
+          color: "#fff",
         },
       }}
     >
       <Stack.Screen name="splashscreen" options={{ headerShown: false }} />
       <Stack.Screen name="index" options={{ title: "Home", headerShown: false }} />
-      <Stack.Screen name="welcome" options={{ title: "Bienvenido" }} />
+      <Stack.Screen name="welcome" options={{ title: "Welcome",headerShown:false }} />
       <Stack.Screen
         name="chat"
         options={{
           title: "Chat",
           headerStyle: {
-            backgroundColor: "#343541", // Color de fondo del header
+            backgroundColor: "#343541",
           },
-          headerTintColor: "#fff", // Color del texto del título y la flecha de regresar
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            color: "#fff", // Color del texto del título
+            color: "#fff",
           },
         }}
       />
