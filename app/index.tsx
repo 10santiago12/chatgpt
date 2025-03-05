@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Text, View, Button } from "react-native";
+import {View, Button } from "react-native";
 
 export default function Index() {
 
@@ -10,10 +10,13 @@ export default function Index() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "#343541",
       }}
     >
     <Button
-    title="Go to Details"    
+    title="Iniciar app :)"
+    onPress={() => router.push("/splashscreen")}
+    color={"#58bed5"}    
     />
     </View>
   );

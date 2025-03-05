@@ -1,8 +1,19 @@
 import { View,StyleSheet} from 'react-native';
 import { Image } from 'expo-image';
 import React from 'react';
+import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
 
-export default function Page() {
+export default function splashscreen() {
+  
+  const router = useRouter();
+
+  useEffect(() => {
+    setTimeout(() => {
+      router.replace("/chat");
+    }, 1000);
+  }, []);
+  
   return (
     <View style={styles.container}>
       <Image
@@ -16,13 +27,13 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#343541",
     justifyContent: "center",
     alignItems: "center",
   },
   logo: {
-    width: 350,
-    height: 350,
+    width: 250,
+    height: 250,
     resizeMode: "contain",
   },
 });
