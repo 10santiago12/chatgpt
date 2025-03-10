@@ -1,57 +1,57 @@
 // authService.ts
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore"; // Importa Firestore
+import { getFirestore, doc, setDoc } from "firebase/firestore"; // Import Firestore
 import app from './firebase-config';
 
 const auth = getAuth(app);
-const db = getFirestore(app); // Inicializa Firestore
+const db = getFirestore(app); // Initialize Firestore
 
 export const registerUser = async (email: string, password: string, username: string) => {
     try {
-        // Registra al usuario con Firebase Auth
+        // Register the user with Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Guarda el nombre del usuario en Firestore
+        // Save the user's name in Firestore
         await setDoc(doc(db, "users", user.uid), {
             email: user.email,
             username: username,
             createdAt: new Date().toISOString(),
         });
 
-        console.log('Usuario registrado y datos guardados en Firestore:', user.uid);
-        return user; // Devuelve el usuario registrado
+        console.log('User registered and data saved in Firestore:', user.uid);
+        return user; // Return the registered user
     } catch (error) {
-        console.error('Error al registrar usuario:', error);
-        throw new Error(getFirebaseErrorMessage(error)); // Lanza un error legible
+        console.error('Error registering user:', error);
+        throw new Error(getFirebaseErrorMessage(error)); // Throw a readable error
     }
 };
 
 export const loginUser = async (email: string, password: string) => {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log('Usuario logueado:', userCredential.user);
-        return userCredential.user; // Devuelve el usuario logueado
+        console.log('User logged in:', userCredential.user);
+        return userCredential.user; // Return the logged-in user
     } catch (error) {
-        console.error('Error al loguear usuario:', error);
-        throw new Error(getFirebaseErrorMessage(error)); // Lanza un error legible
+        console.error('Error logging in user:', error);
+        throw new Error(getFirebaseErrorMessage(error)); // Throw a readable error
     }
 };
 
-// Función para traducir errores de Firebase a mensajes legibles
+// Function to translate Firebase errors to readable messages
 const getFirebaseErrorMessage = (error: any) => {
     switch (error.code) {
         case 'auth/email-already-in-use':
-            return 'El correo electrónico ya está en uso.';
+            return 'The email address is already in use.';
         case 'auth/invalid-email':
-            return 'El correo electrónico no es válido.';
+            return 'The email address is not valid.';
         case 'auth/weak-password':
-            return 'La contraseña es demasiado débil.';
+            return 'The password is too weak.';
         case 'auth/user-not-found':
-            return 'Usuario no encontrado.';
+            return 'User not found.';
         case 'auth/wrong-password':
-            return 'Contraseña incorrecta.';
+            return 'Incorrect password.';
         default:
-            return 'Ocurrió un error. Por favor, inténtalo de nuevo.';
+            return 'An error occurred. Please try again.';
     }
 };
