@@ -6,7 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { getAuth, signOut } from "firebase/auth";
 import { router } from 'expo-router';
 import styles from '../utils/chat-styles';
-import { saveMessage } from '../utils/chats';
 
 export default function Chat() {
   const [message, setMessage] = useState("");
@@ -44,11 +43,6 @@ export default function Chat() {
 
       const data: APIResponse = await response.json();
       const aiMessage = data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response received";
-
-      // Guardar mensaje del usuario y mensaje de la AI en Firestore
-      const chatId = "uniqueChatId"; // Debes definir cómo obtener y manejar el ID único de cada chat
-      await saveMessage(chatId, message, true);
-      await saveMessage(chatId, aiMessage, false);
 
       setMessages((prev) => [...prev, { text: aiMessage, user: false }]);
     } catch (error) {
