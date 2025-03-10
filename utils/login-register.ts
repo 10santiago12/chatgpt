@@ -8,11 +8,10 @@ const db = getFirestore(app); // Initialize Firestore
 
 export const registerUser = async (email: string, password: string, username: string) => {
     try {
-        // Register the user with Firebase Auth
+        
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Save the user's name in Firestore
         await setDoc(doc(db, "users", user.uid), {
             email: user.email,
             username: username,
@@ -20,10 +19,10 @@ export const registerUser = async (email: string, password: string, username: st
         });
 
         console.log('User registered and data saved in Firestore:', user.uid);
-        return user; // Return the registered user
+        return user; 
     } catch (error) {
         console.error('Error registering user:', error);
-        throw new Error(getFirebaseErrorMessage(error)); // Throw a readable error
+        throw new Error(getFirebaseErrorMessage(error));
     }
 };
 
