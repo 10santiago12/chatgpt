@@ -1,11 +1,10 @@
 // AuthScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { registerUser, loginUser } from '../utils/login-register';
+import { router } from 'expo-router'; // Importa router de expo-router
 
-import { NavigationProp } from '@react-navigation/native';
-
-export default function AuthScreen({ navigation }: { navigation: NavigationProp<any> }) { // Asegúrate de recibir `navigation` como prop
+export default function AuthScreen() {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -21,11 +20,11 @@ export default function AuthScreen({ navigation }: { navigation: NavigationProp<
             if (isLogin) {
                 await loginUser(email, password);
                 setSuccessMessage('Inicio de sesión exitoso');
-                navigation.navigate('Chat'); // Redirigir a la pantalla de chat
+                router.push('/chat'); // Redirigir a la pantalla de chat usando router
             } else {
                 await registerUser(email, password, username);
                 setSuccessMessage('Registro exitoso');
-                navigation.navigate('Chat'); // Redirigir a la pantalla de chat
+                router.push('/chat'); // Redirigir a la pantalla de chat usando router
             }
         } catch (error) {
             console.error('Error en la autenticación:', error);

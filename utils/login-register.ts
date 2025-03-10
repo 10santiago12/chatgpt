@@ -1,14 +1,26 @@
 // authService.ts
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore"; // Importa Firestore
 import app from './firebase-config';
 
 const auth = getAuth(app);
+const db = getFirestore(app); // Inicializa Firestore
 
 export const registerUser = async (email: string, password: string, username: string) => {
     try {
+        // Registra al usuario con Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log('Usuario registrado:', userCredential.user);
-        return userCredential.user; // Devuelve el usuario registrado
+        const user = userCredential.user;
+
+        // Guarda el nombre del usuario en Firestore
+        await setDoc(doc(db, "users", user.uid), {
+            email: user.email,
+            username: username,
+            createdAt: new Date().toISOString(),
+        });
+
+        console.log('Usuario registrado y datos guardados en Firestore:', user.uid);
+        return user; // Devuelve el usuario registrado
     } catch (error) {
         console.error('Error al registrar usuario:', error);
         throw new Error(getFirebaseErrorMessage(error)); // Lanza un error legible
