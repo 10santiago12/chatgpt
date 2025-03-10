@@ -1,17 +1,35 @@
+// AuthScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
+import { registerUser, loginUser } from '../utils/login-register';
 
-export default function AuthScreen() {
+import { NavigationProp } from '@react-navigation/native';
+
+export default function AuthScreen({ navigation }: { navigation: NavigationProp<any> }) { // Asegúrate de recibir `navigation` como prop
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
+    const [errorMessage, setErrorMessage] = useState(''); // Estado para mensajes de error
+    const [successMessage, setSuccessMessage] = useState(''); // Estado para mensajes de éxito
 
-    const handleAuth = () => {
-        if (isLogin) {
-            console.log('Login con:', email, password);
-        } else {
-            console.log('Register con:', username, email, password);
+    const handleAuth = async () => {
+        setErrorMessage(''); // Limpiar mensajes de error previos
+        setSuccessMessage(''); // Limpiar mensajes de éxito previos
+
+        try {
+            if (isLogin) {
+                await loginUser(email, password);
+                setSuccessMessage('Inicio de sesión exitoso');
+                navigation.navigate('Chat'); // Redirigir a la pantalla de chat
+            } else {
+                await registerUser(email, password, username);
+                setSuccessMessage('Registro exitoso');
+                navigation.navigate('Chat'); // Redirigir a la pantalla de chat
+            }
+        } catch (error) {
+            console.error('Error en la autenticación:', error);
+            setErrorMessage((error as Error).message); // Mostrar mensaje de error
         }
     };
 
@@ -28,6 +46,17 @@ export default function AuthScreen() {
                     resizeMode="contain"
                 />
                 <Text style={styles.title}>{isLogin ? 'Login' : 'Register'}</Text>
+
+                {/* Mostrar mensajes de error */}
+                {errorMessage ? (
+                    <Text style={styles.errorText}>{errorMessage}</Text>
+                ) : null}
+
+                {/* Mostrar mensajes de éxito */}
+                {successMessage ? (
+                    <Text style={styles.successText}>{successMessage}</Text>
+                ) : null}
+
                 {!isLogin && (
                     <TextInput
                         style={styles.input}
@@ -115,5 +144,13 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         marginBottom: 20,
+    },
+    errorText: {
+        color: 'red',
+        marginBottom: 10,
+    },
+    successText: {
+        color: 'green',
+        marginBottom: 10,
     },
 });

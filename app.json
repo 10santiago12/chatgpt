@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "chatgpt",
-    "slug": "chatgpt",
+    "name": "Chat GPT",
+    "slug": "Chat GPT",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/images.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -20,7 +20,7 @@
     "web": {
       "bundler": "metro",
       "output": "single",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/images.png"
     },
     "plugins": [
       "expo-router",
