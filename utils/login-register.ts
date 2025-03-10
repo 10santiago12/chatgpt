@@ -1,7 +1,7 @@
 // authService.ts
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore"; // Import Firestore
-import app from './firebase-config';
+import app from './firebaseConfig';
 
 const auth = getAuth(app);
 const db = getFirestore(app); // Initialize Firestore

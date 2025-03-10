@@ -10,7 +10,8 @@ header: {
 flexDirection: "row",
 justifyContent: "space-between",
 alignItems: "center",
-padding: 10,
+paddingTop: 50,
+padding: 20,
 backgroundColor: "#343541",
 },
 fullScreenMenu: {

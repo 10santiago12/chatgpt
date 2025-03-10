@@ -122,12 +122,12 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     button: {
-        width: '100%',
+        width: "60%",
         height: 40,
         backgroundColor: '#18a47c',
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 5,
+        borderRadius: 15,
         marginBottom: 10,
     },
     buttonText: {
