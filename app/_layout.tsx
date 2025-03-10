@@ -26,6 +26,8 @@ export default function RootLayout() {
           },
         }}
       />
+      <Stack.Screen name="login" options={{ title: "Login", headerShown: false }} />
     </Stack>
+    
   );
 }
