@@ -1,7 +1,9 @@
+import { DataProvider } from "@/context/DataContext";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
   return (
+  <DataProvider>
     <Stack
       screenOptions={{
         headerTintColor: "#fff",
@@ -16,6 +18,6 @@ export default function RootLayout() {
       <Stack.Screen name="chat"options={{title: "Chat",headerShown:false }}/>
       <Stack.Screen name="login" options={{ title: "Login", headerShown: false }} />
     </Stack>
-    
+  </DataProvider>
   );
 }

@@ -1,11 +1,4 @@
-// To parse this data:
-//
-//   import { Convert, Welcome } from "./file";
-//
-//   const welcome = Convert.toWelcome(json);
-//
-// These functions will throw an error if the JSON doesn't
-// match the expected interface, even if the JSON is valid.
+import { Timestamp } from "firebase/firestore";
 
 export interface Welcome {
     candidates:    Candidate[];
@@ -46,4 +39,11 @@ export interface Message {
     sender_by: "Bot"|"Me",
     date: Date;
     state:"received"|"viewed";
+}
+
+export interface FirestoreChat {
+    id?: string; // Opcional porque Firestore lo genera
+    title: string;
+    created_at: Timestamp; // Usa el tipo correcto para timestamp
+    messages: Message[];
 }
