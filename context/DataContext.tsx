@@ -52,7 +52,6 @@ try {
 }
 };
 
-// Obtener todos los chats
 const getChats = async () => {
 try {
     const querySnapshot = await getDocs(collection(db, "chats"));
