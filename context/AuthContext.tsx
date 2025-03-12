@@ -1,75 +1,98 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { getAuth, onAuthStateChanged, signOut, User } from "firebase/auth";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+// AuthContext.tsx
+import { createContext, useContext, useState, ReactNode } from "react";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
-import app from "../utils/firebaseConfig"; // Asegúrate de que la ruta sea correcta
+import app from "@/utils/firebaseConfig";
+import { User } from "firebase/auth";
+
+interface AuthContextProps {
+user: User | null;
+loading: boolean;
+error: string | null;
+success: string | null;
+register: (email: string, password: string, username: string) => Promise<void>;
+login: (email: string, password: string) => Promise<void>;
+logout: () => void;
+}
+
+export const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
+
+export const useAuthContext = () => useContext(AuthContext);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+const [user, setUser] = useState<User | null>(null);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState<string | null>(null);
+const [success, setSuccess] = useState<string | null>(null);
 
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-interface AuthContextType {
-user: User | null;
-loading: boolean;
-registerUser: (email: string, password: string, username: string) => Promise<User>;
-loginUser: (email: string, password: string) => Promise<User>;
-logoutUser: () => Promise<void>;
-}
+const register = async (email: string, password: string, username: string) => {
+setLoading(true);
+setError(null);
+setSuccess(null);
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
 
-// **📌 Proveedor del contexto**
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-const [user, setUser] = useState<User | null>(null);
-const [loading, setLoading] = useState(true);
-
-// 📌 Escucha el estado de autenticación
-useEffect(() => {
-const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-    setLoading(false);
-});
-return () => unsubscribe();
-}, []);
-
-// 📌 Registrar usuario y guardarlo en Firestore
-const registerUser = async (email: string, password: string, username: string) => {
-const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-const user = userCredential.user;
-
-await setDoc(doc(db, "users", user.uid), {
+    await setDoc(doc(db, "users", user.uid), {
     email: user.email,
     username: username,
     createdAt: new Date().toISOString(),
-});
+    });
 
-setUser(user);
-return user;
+    setUser(user);
+    setSuccess("Registro exitoso");
+} catch (error) {
+    setError(getFirebaseErrorMessage(error));
+} finally {
+    setLoading(false);
+}
 };
 
-// 📌 Iniciar sesión
-const loginUser = async (email: string, password: string) => {
-const userCredential = await signInWithEmailAndPassword(auth, email, password);
-setUser(userCredential.user);
-return userCredential.user;
+const login = async (email: string, password: string) => {
+setLoading(true);
+setError(null);
+setSuccess(null);
+
+try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    setUser(userCredential.user);
+    setSuccess("Inicio de sesión exitoso");
+} catch (error) {
+    setError(getFirebaseErrorMessage(error));
+} finally {
+    setLoading(false);
+}
 };
 
-// 📌 Cerrar sesión
-const logoutUser = async () => {
-await signOut(auth);
+const logout = () => {
 setUser(null);
+setSuccess("Sesión cerrada");
+};
+
+const getFirebaseErrorMessage = (error: any) => {
+switch (error.code) {
+    case "auth/email-already-in-use":
+    return "El correo electrónico ya está en uso.";
+    case "auth/invalid-email":
+    return "El correo electrónico no es válido.";
+    case "auth/weak-password":
+    return "La contraseña es demasiado débil.";
+    case "auth/user-not-found":
+    return "Usuario no encontrado.";
+    case "auth/wrong-password":
+    return "Contraseña incorrecta.";
+    default:
+    return "Ocurrió un error. Por favor, inténtalo de nuevo.";
+}
 };
 
 return (
-<AuthContext.Provider value={{ user, loading, registerUser, loginUser, logoutUser }}>
-    {!loading && children} 
+<AuthContext.Provider value={{ user, loading, error, success, register, login, logout }}>
+    {children}
 </AuthContext.Provider>
 );
-};
-
-export const useAuth = () => {
-const context = useContext(AuthContext);
-if (!context) {
-throw new Error("useAuth must be used within an AuthProvider");
-}
-return context;
 };
