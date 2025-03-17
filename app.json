@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Chat GPT",
-    "slug": "Chat GPT",
+    "name": "Chat-GPT",
+    "slug": "Chat-GPT",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/images.png",
@@ -15,11 +15,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.santiago1210.ChatGPT"
     },
     "web": {
       "bundler": "metro",
-      "output": "single",
+      "output": "static",
       "favicon": "./assets/images/images.png"
     },
     "plugins": [
@@ -36,6 +37,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "6cf2fea2-bf6f-42a6-9dbc-0ecbe952fad4"
+      }
     }
   }
 }
