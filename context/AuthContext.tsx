@@ -1,18 +1,19 @@
-// AuthContext.tsx
-import { createContext, useContext, useState, ReactNode } from "react";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { User, getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import app from "@/utils/firebaseConfig";
-import { User } from "firebase/auth";
+import { router } from "expo-router";
 
 interface AuthContextProps {
-user: User | null;
-loading: boolean;
-error: string | null;
-success: string | null;
-register: (email: string, password: string, username: string) => Promise<void>;
-login: (email: string, password: string) => Promise<void>;
-logout: () => void;
+    user: User | null;
+    loading: boolean;
+    error: string | null;
+    success: string | null;
+    register: (email: string, password: string, username: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<void>;
+    logout: () => void;
+    setError: (error: string | null) => void;
+    handleAuth: (email: string, password: string, username: string) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -20,79 +21,115 @@ export const AuthContext = createContext<AuthContextProps>({} as AuthContextProp
 export const useAuthContext = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-const [user, setUser] = useState<User | null>(null);
-const [loading, setLoading] = useState(false);
-const [error, setError] = useState<string | null>(null);
-const [success, setSuccess] = useState<string | null>(null);
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+    const [isLogin] = useState(true);
 
-const auth = getAuth(app);
-const db = getFirestore(app);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-const register = async (email: string, password: string, username: string) => {
-setLoading(true);
-setError(null);
-setSuccess(null);
+    const register = async (email: string, password: string, username: string) => {
+        setLoading(true);
+        setError(null);
+        setSuccess(null);
+    
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+    
+            await setDoc(doc(db, "users", user.uid), {
+                email: user.email,
+                username: username,
+                createdAt: new Date().toISOString(),
+            });
+    
+            setUser(user);
+            setSuccess("Registration successful");
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setError(getFirebaseErrorMessage(error));
+            } else {
+                setError("An unexpected error occurred.");
+            }
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
 
-try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+    const handleAuth = async (email: string, password: string, username: string) => {
+            if (!email || !password) {
+                setError("Please enter your email and password.");
+                return;
+            }
+            
+            try {
+                if (isLogin) {
+                await login(email, password);
+                } else {
+                if (!username) {
+                    setError("Please enter a username.");
+                        return;
+                    }
+                    await register(email, password, username);
+                }
+                router.replace("/chat");
+            } catch (error) {
+            }
+        };
 
-    await setDoc(doc(db, "users", user.uid), {
-    email: user.email,
-    username: username,
-    createdAt: new Date().toISOString(),
-    });
+    const login = async (email: string, password: string) => {
+        setLoading(true);
+        setError(null);
+        setSuccess(null);
+    
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            setUser(userCredential.user);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setError(getFirebaseErrorMessage(error));
+            } else {
+                setError("An error occurred. Please try again.");
+            }
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    setUser(user);
-    setSuccess("Registro exitoso");
-} catch (error) {
-    setError(getFirebaseErrorMessage(error));
-} finally {
-    setLoading(false);
-}
-};
+    const logout = async () => {
+        try {
+            await auth.signOut();
+            setUser(null);
+            router.replace("/welcome");
+        } catch (error) {
+            console.error("Error logging out:", error);
+        }
+    };
 
-const login = async (email: string, password: string) => {
-setLoading(true);
-setError(null);
-setSuccess(null);
+    const getFirebaseErrorMessage = (error: any) => {
+        switch (error.code) {
+            case "auth/email-already-in-use":
+                return "The email address is already in use.";
+            case "auth/invalid-email":
+                return "The email address is not valid.";
+            case "auth/weak-password":
+                return "The password is too weak.";
+            case "auth/user-not-found":
+                return "User not found.";
+            case "auth/wrong-password":
+                return "Incorrect password.";
+            default:
+                return "An error occurred. Please try again.";
+        }
+    };
 
-try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    setUser(userCredential.user);
-    setSuccess("Inicio de sesión exitoso");
-} catch (error) {
-    setError(getFirebaseErrorMessage(error));
-} finally {
-    setLoading(false);
-}
-};
-
-const logout = () => {
-setUser(null);
-setSuccess("Sesión cerrada");
-};
-
-const getFirebaseErrorMessage = (error: any) => {
-switch (error.code) {
-    case "auth/email-already-in-use":
-    return "El correo electrónico ya está en uso.";
-    case "auth/invalid-email":
-    return "El correo electrónico no es válido.";
-    case "auth/weak-password":
-    return "La contraseña es demasiado débil.";
-    case "auth/user-not-found":
-    return "Usuario no encontrado.";
-    case "auth/wrong-password":
-    return "Contraseña incorrecta.";
-    default:
-    return "Ocurrió un error. Por favor, inténtalo de nuevo.";
-}
-};
-
-return (
-<AuthContext.Provider value={{ user, loading, error, success, register, login, logout }}>
-    {children}
-</AuthContext.Provider>
-);
+    return (
+        <AuthContext.Provider value={{ user, loading, error, success, register, handleAuth, login, logout,setError }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };

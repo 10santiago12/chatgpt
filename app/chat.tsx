@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { APIResponse } from '@/interfaces/Responses';
 import Markdown from 'react-native-markdown-display';
 import { Ionicons } from '@expo/vector-icons';
-import { getAuth, signOut } from "firebase/auth";
+import { AuthContext } from '../context/AuthContext';
 import { useRouter } from 'expo-router';
 import styles from '../utils/chat-styles';
 import { DataContext, DataProvider } from '../context/DataContext';
@@ -34,7 +34,7 @@ export default function Chat() {
     };
 
     fetchChats();
-  }, [messages]);
+  }, [messages])
 
   const getResponse = async () => {
     if (!message.trim()) return;
@@ -63,7 +63,7 @@ export default function Chat() {
       }
 
       if (!chatId) {
-        throw new Error("No se pudo crear o actualizar el chat.");
+        throw new Error("Failed to create or update the chat.");
       }
   
       const response = await fetch(
@@ -155,15 +155,7 @@ export default function Chat() {
     closeMenu();
   };
 
-  const handleLogout = async () => {
-    try {
-      const auth = getAuth();
-      await signOut(auth);
-      router.push('/welcome');
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-    }
-  };
+  const { logout } = useContext(AuthContext);
 
   return (
     <DataProvider>
@@ -197,13 +189,13 @@ export default function Chat() {
 
             <View style={styles.menuContent}>
               <TouchableOpacity style={styles.newChatButton} onPress={handleNewChat}>
-                <Text style={styles.newChatButtonText}>Nuevo chat</Text>
+                <Text style={styles.newChatButtonText}>New chat</Text>
               </TouchableOpacity>
 
               <ScrollView style={styles.chatList}></ScrollView>
 
-              <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-                <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+              <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+                <Text style={styles.logoutButtonText}>Log Out</Text>
               </TouchableOpacity>
             </View>
           </Animated.View>
