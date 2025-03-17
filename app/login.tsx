@@ -74,11 +74,16 @@ export default function Login() {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={styles.button} onPress={() => handleAuth(email, password, username)} disabled={loading}>
+                <TouchableOpacity 
+                    style={styles.button} 
+                    onPress={() => handleAuth(email, password, username, isLogin)} 
+                    disabled={loading}
+                >
                     <Text style={styles.buttonText}>
                         {loading ? "Loading..." : isLogin ? "Login" : "Register"}
                     </Text>
                 </TouchableOpacity>
+
 
                 <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
                     <Text style={[styles.switchText, { textDecorationLine: "underline" }]}>

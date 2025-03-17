@@ -13,7 +13,7 @@ interface AuthContextProps {
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
     setError: (error: string | null) => void;
-    handleAuth: (email: string, password: string, username: string) => Promise<void>;
+    handleAuth: (email: string, password: string, username: string, isLogin:boolean) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -46,12 +46,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             });
     
             setUser(user);
-            setSuccess("Registration successful");
         } catch (error: unknown) {
             if (error instanceof Error) {
                 setError(getFirebaseErrorMessage(error));
             } else {
                 setError("An unexpected error occurred.");
+                console.error("An error occurred:", error);
             }
             throw error;
         } finally {
@@ -59,26 +59,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const handleAuth = async (email: string, password: string, username: string) => {
-            if (!email || !password) {
-                setError("Please enter your email and password.");
-                return;
-            }
-            
-            try {
-                if (isLogin) {
+    const handleAuth = async (email: string, password: string, username: string, isLogin: boolean) => {
+        if (!email || !password) {
+            setError("Please enter your email and password.");
+            return;
+        }
+    
+        try {
+            if (isLogin) {
                 await login(email, password);
-                } else {
+            } else {
                 if (!username) {
                     setError("Please enter a username.");
-                        return;
-                    }
-                    await register(email, password, username);
+                    return;
                 }
-                router.replace("/chat");
-            } catch (error) {
+                await register(email, password, username);
             }
-        };
+            router.replace("/chat");
+        } catch (error) {
+            console.error("Authentication error:", error);
+        }
+    };        
 
     const login = async (email: string, password: string) => {
         setLoading(true);
