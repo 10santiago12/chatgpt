@@ -1,50 +1,67 @@
-# Welcome to your Expo app 👋
+# 📱 Expo Chat App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+¡Bienvenido al repositorio de la **Expo Chat App**! Esta aplicación móvil desarrollada con **Expo** y **React Native** te permite chatear de manera intuitiva y segura. Incluye funcionalidades como autenticación de usuarios (login y registro), manejo de chats en tiempo real, integración con APIs externas, y más.
 
-## Get started
+## 🚀 Características principales
 
-1. Install dependencies
+- **Autenticación de usuarios**:
+  - Registro y login seguro con Firebase Authentication.
+  - Manejo de sesiones y protección de rutas.
+  
+- **Chat en tiempo real**:
+  - Creación de nuevos chats.
+  - Envío y recepción de mensajes.
+  - Almacenamiento de chats en Firestore.
+  - Visualización de mensajes con formato Markdown.
 
-   ```bash
-   npm install
-   ```
+- **Integración con APIs externas**:
+  - Uso de la API de **Gemini** para generar respuestas automáticas.
+  - Manejo de respuestas y errores de la API.
 
-2. Start the app
+- **Interfaz intuitiva**:
+  - Diseño moderno y responsive.
+  - Menú desplegable para gestionar chats.
+  - Opciones para borrar chats individuales o todos los chats.
 
-   ```bash
-    npx expo start
-   ```
+- **Funcionalidades adicionales**:
+  - Cierre de sesión seguro.
+  - Animaciones fluidas para una mejor experiencia de usuario.
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🛠️ Tecnologías utilizadas
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Frontend**:
+  - [React Native](https://reactnative.dev/)
+  - [Expo](https://expo.dev/)
+  - [React Navigation](https://reactnavigation.org/) (para la navegación)
+  - [Markdown](https://github.com/iamacup/react-native-markdown-display) (para renderizar mensajes)
 
-## Get a fresh project
+- **Backend**:
+  - [Firebase](https://firebase.google.com/) (Authentication y Firestore)
+  - [Gemini API](https://ai.google/) (para respuestas automáticas)
 
-When you're ready, run:
+- **Estilos**:
+  - [StyleSheet](https://reactnative.dev/docs/stylesheet) (para estilos en React Native)
 
-```bash
-npm run reset-project
-```
+- **Animaciones**:
+  - [Animated](https://reactnative.dev/docs/animated) (para animaciones fluidas)
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 📦 Instalación
 
-To learn more about developing your project with Expo, look at the following resources:
+Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno local.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Requisitos previos
 
-## Join the community
+- [Node.js](https://nodejs.org/) (v16 o superior)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/) (instalado globalmente)
+- Cuenta de [Firebase](https://firebase.google.com/) (para Authentication y Firestore)
+- Clave de API de [Gemini](https://ai.google/) (opcional, para respuestas automáticas)
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Instrucciones para usar:
+1. Copia el contenido anterior.
+2. Pega el contenido en un archivo llamado `README.md` en la raíz de tu proyecto.
+3. Reemplaza los marcadores de posición como `[tu-usuario]`, `[tu-email@example.com]`, y `[TU_CLAVE_DE_API]` con tus datos reales.
+4. Si tienes capturas de pantalla, agrégalas en la carpeta `assets/` y actualiza las rutas en la sección de capturas.

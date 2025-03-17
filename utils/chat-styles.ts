@@ -139,8 +139,8 @@ export default StyleSheet.create({
 
     closeButton: {
         position: "absolute",
-        top: 65,
-        right: 45,
+        top: 50,
+        right: 50,
         zIndex: 2,
     },
 

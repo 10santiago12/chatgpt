@@ -88,8 +88,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
             const q = query(collection(db, "chats"), where("userid", "==", userId));
             const querySnapshot = await getDocs(q);
             const userChats: FirestoreChat[] = querySnapshot.docs.map((doc) => ({
-                id: doc.id, // ID del documento
-                ...doc.data(), // Resto de los campos (title, userid, messages, created_at)
+                id: doc.id, 
+                ...doc.data(), 
             })) as FirestoreChat[];
             return userChats;
         } catch (error) {
@@ -98,7 +98,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    // Nueva función: Obtener los mensajes de un chat específico
     const getChatMessages = async (chatId: string) => {
         try {
             const chatRef = doc(db, "chats", chatId);
