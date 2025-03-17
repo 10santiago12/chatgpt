@@ -24,7 +24,6 @@ export default function Chat() {
     const messageFadeAnim = useRef(new Animated.Value(1)).current;
     const router = useRouter();
 
-    // Cargar los chats del usuario cuando el menú se abre
     useEffect(() => {
         if (isMenuVisible && user) {
             const fetchUserChats = async () => {
@@ -35,7 +34,6 @@ export default function Chat() {
         }
     }, [isMenuVisible, user]);
 
-    // Cargar los mensajes del chat seleccionado
     const loadChatMessages = async (chatId: string) => {
         const messages = await context.getChatMessages(chatId);
         setMessages(messages);
@@ -62,7 +60,6 @@ export default function Chat() {
   
           let chatId = currentChatId;
   
-          // Si no hay un chat actual, crea uno nuevo
           if (!chatId) {
               chatId = (await context.createChat("New Chat", [newUserMessage])) || null;
               setCurrentChatId(chatId);
@@ -74,13 +71,11 @@ export default function Chat() {
               throw new Error("Failed to create or update the chat.");
           }
   
-          // Actualizar el título del chat con las primeras 5 palabras del mensaje
-          if (messages.length === 0) { // Solo actualiza el título si es el primer mensaje
+          if (messages.length === 0) {
               const title = message.split(" ").slice(0, 5).join(" ");
               await context.updateChatTitle(chatId, title);
           }
   
-          // Enviar el mensaje a la API y obtener la respuesta
           const response = await fetch(
               "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB3k152tRx7iO3LTeyts5oFzbIR3OBFawA",
               {
@@ -197,12 +192,10 @@ export default function Chat() {
                   </TouchableOpacity>
   
                   <View style={styles.menuContent}>
-                      {/* Botón para nuevo chat */}
                       <TouchableOpacity style={styles.newChatButton} onPress={handleNewChat}>
                           <Text style={styles.newChatButtonText}>New chat</Text>
                       </TouchableOpacity>
   
-                      {/* Lista de chats */}
                       <ScrollView style={styles.chatList}>
                           {userChats.map((chat) => (
                               <View key={chat.id} style={styles.chatItemContainer}>
@@ -212,7 +205,6 @@ export default function Chat() {
                                   >
                                       <Text style={styles.chatItemText}>{chat.title}</Text>
                                   </TouchableOpacity>
-                                  {/* Ícono para borrar el chat específico */}
                                   <TouchableOpacity
                                       style={styles.deleteIcon}
                                       onPress={async () => {
@@ -230,23 +222,21 @@ export default function Chat() {
                           ))}
                       </ScrollView>
   
-                      {/* Botón para borrar todos los chats */}
                       <TouchableOpacity
                           style={styles.deleteButton}
                           onPress={async () => {
                               if (user) {
                                   await context.deleteAllChats(user.uid);
-                                  setUserChats([]); // Limpiar la lista de chats
-                                  setMessages([]); // Limpiar los mensajes
-                                  setCurrentChatId(null); // Reiniciar el chat actual
-                                  closeMenu(); // Cerrar el menú
+                                  setUserChats([]);
+                                  setMessages([]);
+                                  setCurrentChatId(null);
+                                  closeMenu();
                               }
                           }}
                       >
                           <Text style={styles.deleteButtonText}>Delete All Chats</Text>
                       </TouchableOpacity>
   
-                      {/* Botón para cerrar sesión */}
                       <TouchableOpacity style={styles.logoutButton} onPress={logout}>
                           <Text style={styles.logoutButtonText}>Log Out</Text>
                       </TouchableOpacity>
@@ -254,7 +244,6 @@ export default function Chat() {
               </Animated.View>
           )}
   
-          {/* Ventana principal de chat */}
           <ScrollView
               ref={scrollViewRef}
               style={styles.chatContainer}
@@ -269,8 +258,7 @@ export default function Chat() {
                   {isLoading && <Text style={styles.loading}>Thinking...</Text>}
               </Animated.View>
           </ScrollView>
-  
-          {/* Input para enviar mensajes */}
+
           <View style={styles.inputContainer}>
               <TextInput
                   style={[styles.input, { paddingVertical: 15 }]}
