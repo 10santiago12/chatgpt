@@ -193,7 +193,7 @@ export default function Chat() {
                   ]}
               >
                   <TouchableOpacity style={styles.closeButton} onPress={closeMenu}>
-                      <Ionicons name="close" size={24} color="#FFF" />
+                      <Ionicons name="close" size={32} color="#FFF" />
                   </TouchableOpacity>
   
                   <View style={styles.menuContent}>
@@ -224,7 +224,7 @@ export default function Chat() {
                                           }
                                       }}
                                   >
-                                      <Ionicons name="trash" size={20} color="#FF0000" />
+                                      <Ionicons name="trash" size={20} color="#FFF" />
                                   </TouchableOpacity>
                               </View>
                           ))}
