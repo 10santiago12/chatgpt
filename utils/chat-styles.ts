@@ -121,4 +121,37 @@ borderRadius: 20,
 padding: 10,
 zIndex: 2,
 },
+
+chatItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#444",
+},
+chatItemText: {
+    color: "#FFF",
+    fontSize: 16,
+},
+chatItemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#444",
+},
+deleteIcon: {
+    padding: 5,
+    color: "#FFF",
+},
+deleteButton: {
+    padding: 10,
+    backgroundColor: "#FF0000",
+    borderRadius: 5,
+    marginTop: 10,
+    alignItems: "center",
+},
+deleteButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+},
 });

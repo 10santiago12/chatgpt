@@ -1,20 +1,20 @@
 import { Timestamp } from "firebase/firestore";
 
 export interface Welcome {
-    candidates:    Candidate[];
+    candidates: Candidate[];
     usageMetadata: UsageMetadata;
-    modelVersion:  string;
+    modelVersion: string;
 }
 
 export interface Candidate {
-    content:      Content;
+    content: Content;
     finishReason: string;
-    avgLogprobs:  number;
+    avgLogprobs: number;
 }
 
 export interface Content {
     parts: Part[];
-    role:  string;
+    role: string;
 }
 
 export interface Part {
@@ -22,28 +22,29 @@ export interface Part {
 }
 
 export interface UsageMetadata {
-    promptTokenCount:        number;
-    candidatesTokenCount:    number;
-    totalTokenCount:         number;
-    promptTokensDetails:     TokensDetail[];
+    promptTokenCount: number;
+    candidatesTokenCount: number;
+    totalTokenCount: number;
+    promptTokensDetails: TokensDetail[];
     candidatesTokensDetails: TokensDetail[];
 }
 
 export interface TokensDetail {
-    modality:   string;
+    modality: string;
     tokenCount: number;
 }
 
 export interface Message {
-    text: string,
-    sender_by: "Bot"|"Me",
+    text: string;
+    sender_by: "Bot" | "Me";
     date: Date;
-    state:"received"|"viewed";
+    state: "received" | "viewed";
 }
 
 export interface FirestoreChat {
-    id?: string; // Opcional porque Firestore lo genera
+    id: string;
     title: string;
-    created_at: Timestamp; // Usa el tipo correcto para timestamp
+    userid: string;
+    created_at: Timestamp;
     messages: Message[];
 }
