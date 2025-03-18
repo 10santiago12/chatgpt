@@ -13,7 +13,6 @@ export default function Chat() {
 const [message, setMessage] = useState("");
 const [messages, setMessages] = useState<Message[]>([]);
 const [isLoading, setIsLoading] = useState(false);
-
 const [isMenuVisible, setIsMenuVisible] = useState(false);
 const [currentChatId, setCurrentChatId] = useState<string | null>(null);
 const [userChats, setUserChats] = useState<FirestoreChat[]>([]);
