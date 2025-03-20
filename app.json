@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/whitelogo.png",
+        "foregroundImage": "./assets/images/whitelogo_resized.png",
         "backgroundColor": "#343541"
       },
       "package": "com.santiago1210.ChatGPT"
