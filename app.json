@@ -4,7 +4,7 @@
     "slug": "Chat-GPT",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/images.png",
+    "icon": "./assets/images/whitelogo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,25 +13,25 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/whitelogo.png",
+        "backgroundColor": "#343541"
       },
       "package": "com.santiago1210.ChatGPT"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/images.png"
+      "favicon": "./assets/images/whitelogo.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/whitelogo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#343541"
         }
       ]
     ],

@@ -60,7 +60,7 @@ export default function Welcome() {
     <View style={styles.container}>
       {}
       <Image
-        source={require('../assets/images/images.png')}
+        source={require('../assets/images/whitelogo.png')}
         style={styles.logo}
         resizeMode="contain"
       />
