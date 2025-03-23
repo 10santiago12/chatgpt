@@ -1,4 +1,3 @@
-// _layout.tsx
 import { AuthProvider } from "@/context/AuthContext";
 import { DataProvider } from "@/context/DataContext";
 import { Stack } from "expo-router";
@@ -6,7 +5,7 @@ import { Stack } from "expo-router";
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <DataProvider> {/* Envuelve toda la aplicación con DataProvider */}
+      <DataProvider>
         <Stack
           screenOptions={{
             headerTintColor: "#fff",
@@ -15,7 +14,6 @@ export default function RootLayout() {
             },
           }}
         >
-          <Stack.Screen name="splashscreen" options={{ headerShown: false }} />
           <Stack.Screen name="index" options={{ title: "Home", headerShown: false }} />
           <Stack.Screen name="welcome" options={{ title: "Welcome", headerShown: false }} />
           <Stack.Screen name="chat" options={{ title: "Chat", headerShown: false }} />

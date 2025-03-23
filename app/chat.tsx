@@ -1,4 +1,4 @@
-import { View, Text, TextInput, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity, Keyboard, Animated, StyleSheet } from 'react-native';
+import { View, Text, TextInput, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity, Animated } from 'react-native';
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import Markdown from 'react-native-markdown-display';
 import { Ionicons } from '@expo/vector-icons';

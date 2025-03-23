@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import { router } from "expo-router";
 import { useAuthContext } from "@/context/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
