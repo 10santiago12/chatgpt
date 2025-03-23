@@ -62,4 +62,4 @@ Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno local.
 
 ### Descargar APK:
 
--[Link] (https://expo.dev/accounts/santiago1210/projects/Chat-GPT/builds/6900d104-669a-4d7b-a5e2-455fa543fe69)
+- [Link] (https://expo.dev/accounts/santiago1210/projects/Chat-GPT/builds/6900d104-669a-4d7b-a5e2-455fa543fe69)
