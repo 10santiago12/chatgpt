@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Button, Animated, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 import React, { useState, useRef } from 'react';
 import { router } from 'expo-router';
 import { Image } from 'expo-image';

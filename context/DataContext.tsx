@@ -1,7 +1,9 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useRef } from "react";
 import { db, auth } from "@/utils/firebaseConfig";
 import { addDoc, collection, getDocs, updateDoc, doc, serverTimestamp, setDoc, getDoc, query, where, deleteDoc } from "firebase/firestore/lite";
 import { FirestoreChat, Message } from "@/interfaces/AppInterfaces";
+import { Animated, Keyboard } from "react-native";
+import { APIResponse } from "@/interfaces/Responses";
 
 interface DataContextProps {
     chats: Message[];
@@ -12,7 +14,23 @@ interface DataContextProps {
     getChatMessages: (chatId: string) => Promise<Message[]>; 
     updateChatTitle: (chatId: string, title: string) => Promise<void>; 
     deleteChat: (chatId: string) => Promise<void>; 
-    deleteAllChats: (userId: string) => Promise<void>; 
+    deleteAllChats: (userId: string) => Promise<void>;
+    getResponse: () => Promise<void>; 
+    loadChatMessages: (chatId: string) => Promise<void>;
+    openMenu: () => void;
+    closeMenu: () => void;
+    handleNewChat: () => Promise<void>;
+    message: string;
+    setMessage: (message: string) => void;
+    messages: Message[];
+    setMessages: (messages: Message[]) => void;
+    isMenuVisible: boolean;
+    isLoading: boolean;
+    currentChatId: string | null;
+    slideAnim: Animated.Value;
+    fadeAnim: Animated.Value;
+    messageFadeAnim: Animated.Value;
+
 }
 
 export const DataContext = createContext<DataContextProps>({} as DataContextProps);
@@ -20,7 +38,147 @@ export const DataContext = createContext<DataContextProps>({} as DataContextProp
 export const useDataContext = () => useContext(DataContext);
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
+    const [message, setMessage] = useState("");
+    const [messages, setMessages] = useState<Message[]>([]);
     const [chats, setChats] = useState<Message[]>([]);
+    const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const slideAnim = useRef(new Animated.Value(-100)).current;
+    const messageFadeAnim = useRef(new Animated.Value(1)).current;
+    
+
+    const loadChatMessages = async (chatId: string) => {
+        const messages = await getChatMessages(chatId);
+        setMessages(messages);
+        setCurrentChatId(chatId);
+        closeMenu();
+    };
+
+    const openMenu = () => {
+        setIsMenuVisible(true);
+        Animated.parallel([
+            Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 300,
+                useNativeDriver: true,
+            }),
+            Animated.timing(slideAnim, {
+                toValue: 0,
+                duration: 300,
+                useNativeDriver: true,
+            }),
+        ]).start();
+    };
+
+    const closeMenu = () => {
+        Animated.parallel([
+            Animated.timing(fadeAnim, {
+                toValue: 0,
+                duration: 300,
+                useNativeDriver: true,
+            }),
+            Animated.timing(slideAnim, {
+                toValue: -100,
+                duration: 300,
+                useNativeDriver: true,
+            }),
+        ]).start(() => setIsMenuVisible(false));
+    };
+
+    const handleNewChat = async () => {
+        Animated.timing(messageFadeAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+        }).start(async () => {
+            const newChatId = await createChat(message, []);
+            if (newChatId) {
+                setMessages([]);
+                setCurrentChatId(newChatId);
+                Animated.timing(messageFadeAnim, {
+                    toValue: 1,
+                    duration: 300,
+                    useNativeDriver: true,
+                }).start();
+            }
+        });
+        closeMenu();
+    };
+
+    const getResponse = async () => {
+        if (!message.trim()) return;
+    
+        const newUserMessage: Message = {
+            text: message,
+            sender_by: "Me",
+            date: new Date(),
+            state: "received",
+        };
+    
+        setMessages((prev) => [...prev, newUserMessage]);
+        setMessage("");
+        Keyboard.dismiss();
+    
+        try {
+            setIsLoading(true);
+    
+            let chatId = currentChatId;
+    
+            if (!chatId) {
+                chatId = (await createChat("New Chat", [newUserMessage])) || null;
+                setCurrentChatId(chatId);
+            } else {
+                await updateChat(chatId, [...messages, newUserMessage]);
+            }
+    
+            if (!chatId) {
+                throw new Error("Failed to create or update the chat.");
+            }
+    
+            if (messages.length === 0) {
+                const title = message.split(" ").slice(0, 5).join(" ");
+                await updateChatTitle(chatId, title);
+            }
+    
+            const response = await fetch(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB3k152tRx7iO3LTeyts5oFzbIR3OBFawA",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: message }] }],
+                    }),
+                }
+            );
+    
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} - ${response.statusText}`);
+            }
+    
+            const data: APIResponse = await response.json();
+            const aiMessage = data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response received";
+    
+            const newAIMessage: Message = {
+                text: aiMessage,
+                sender_by: "Bot",
+                date: new Date(),
+                state: "received",
+            };
+    
+            setMessages((prev) => [...prev, newAIMessage]);
+    
+            await updateChat(chatId, [...messages, newUserMessage, newAIMessage]);
+        } catch (error) {
+            console.log("Error:", error);
+            setMessages((prev) => [...prev, { text: "Error getting response", sender_by: "Bot", date: new Date(), state: "received" }]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const createChat = async (text: string, messages: Message[]) => {
         try {
@@ -134,7 +292,34 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <DataContext.Provider value={{ chats, createChat, updateChat, getChats, getUserChats, getChatMessages, updateChatTitle, deleteChat, deleteAllChats }}>
+        <DataContext.Provider 
+            value={{ 
+                chats, 
+                getResponse, 
+                createChat, 
+                updateChat, 
+                handleNewChat, 
+                openMenu, 
+                closeMenu, 
+                getChats, 
+                loadChatMessages, 
+                getUserChats, 
+                getChatMessages, 
+                updateChatTitle, 
+                deleteChat, 
+                deleteAllChats,
+                message,
+                setMessage,
+                messages,
+                setMessages,
+                isMenuVisible,
+                isLoading,
+                currentChatId,
+                slideAnim,
+                fadeAnim,
+                messageFadeAnim
+            }}
+        >
             {children}
         </DataContext.Provider>
     );

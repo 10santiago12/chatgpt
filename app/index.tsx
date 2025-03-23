@@ -1,23 +1,27 @@
-import { useRouter } from "expo-router";
-import {View, Button } from "react-native";
+import { useEffect } from 'react';
+import { useRouter } from 'expo-router';
+import { View } from 'react-native';
 
 export default function Index() {
-
   const router = useRouter();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      router.push('/welcome');
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#343541",
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#343541',
       }}
     >
-    <Button
-    title="Start app :)"
-    onPress={() => router.push("/splashscreen")}
-    color={"#58bed5"}    
-    />
     </View>
   );
 }

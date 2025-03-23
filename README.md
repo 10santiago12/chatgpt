@@ -60,8 +60,6 @@ Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno local.
 - Cuenta de [Firebase](https://firebase.google.com/) (para Authentication y Firestore)
 - Clave de API de [Gemini](https://ai.google/) (opcional, para respuestas automáticas)
 
-### Instrucciones para usar:
-1. Copia el contenido anterior.
-2. Pega el contenido en un archivo llamado `README.md` en la raíz de tu proyecto.
-3. Reemplaza los marcadores de posición como `[tu-usuario]`, `[tu-email@example.com]`, y `[TU_CLAVE_DE_API]` con tus datos reales.
-4. Si tienes capturas de pantalla, agrégalas en la carpeta `assets/` y actualiza las rutas en la sección de capturas.
+### Descargar APK:
+
+-[Link] (https://expo.dev/accounts/santiago1210/projects/Chat-GPT/builds/6900d104-669a-4d7b-a5e2-455fa543fe69)
